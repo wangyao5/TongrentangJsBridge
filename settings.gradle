@@ -1,0 +1,4 @@
+include ':app'
+
+include ":JsBridgeLib"
+project(':JsBridgeLib').projectDir = new File('./framework')
