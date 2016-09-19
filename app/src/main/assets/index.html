@@ -23,7 +23,15 @@
             />
         </p>
         <p>
-            <input type="button" value="播放" onclick="device.ttsPay('你好', function(msg){console.log('receiveMsg:' + msg)});"
+            <input type="button" value="播放" onclick="device.ttsPlay('你好', function(msg){console.log('receiveProgress:' + msg)});"
+            />
+        </p>
+        <p>
+            <input type="button" value="取消" onclick="device.ttsStop();"
+            />
+        </p>
+        <p>
+            <input type="button" value="暂停" onclick="device.ttsPause();"
             />
         </p>
         <p>

@@ -58,17 +58,14 @@ public class MainActivity extends Activity {
 
             @Override
             public void handler(String data, CallBackFunction function) {
-                Log.i(TAG, "aahandler = submitFromWeb, data from web = " + data);
-                function.onCallBack("submitFromWeb exe, response data 中文 from Java");
                 MainActivity.this.finish();
             }
 
         });
 
-        webView.registerHandler("ttsPay", new BridgeHandler() {
+        webView.registerHandler("ttsPlay", new BridgeHandler() {
             @Override
             public void handler(String data, CallBackFunction function) {
-                android.util.Log.v("yaowang",data);
                 String text = "";
                 try {
                     JSONArray jsonArray = new JSONArray(data);
@@ -80,7 +77,7 @@ public class MainActivity extends Activity {
                 int code = mTts.startSpeaking(text, new SynthesizerListener(){
                     @Override
                     public void onSpeakBegin() {
-                        func.onCallBack("{status:0}");
+                        func.onCallBack("{speakProgress:0}");
                     }
 
                     @Override
@@ -99,17 +96,21 @@ public class MainActivity extends Activity {
                     }
 
                     @Override
-                    public void onSpeakProgress(int i, int i1, int i2) {
+                    public void onSpeakProgress(int percent, int beginPos, int endPos) {
 
                     }
 
                     @Override
                     public void onCompleted(SpeechError speechError) {
-
+                        if (speechError == null) {
+                            func.onCallBack("{speakProgress:1}");
+                        } else if (speechError != null) {
+                            android.util.Log.v(TAG, speechError.getPlainDescription(true));
+                        }
                     }
 
                     @Override
-                    public void onEvent(int i, int i1, int i2, Bundle bundle) {
+                    public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {
 
                     }
                 });
@@ -132,10 +133,24 @@ public class MainActivity extends Activity {
             }
         });
 
-        webView.registerHandler("ttsStop", new BridgeHandler() {
+        webView.registerHandler("ttsCancel", new BridgeHandler() {
             @Override
             public void handler(String data, CallBackFunction function) {
-                android.util.Log.v("yaowang",data);
+                mTts.stopSpeaking();
+            }
+        });
+
+        webView.registerHandler("ttsPause", new BridgeHandler() {
+            @Override
+            public void handler(String data, CallBackFunction function) {
+                mTts.pauseSpeaking();
+            }
+        });
+
+        webView.registerHandler("ttsResume", new BridgeHandler() {
+            @Override
+            public void handler(String data, CallBackFunction function) {
+                mTts.resumeSpeaking();
             }
         });
 

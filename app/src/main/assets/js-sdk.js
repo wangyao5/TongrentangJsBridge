@@ -13,16 +13,21 @@
         exit : function() {
             callHandler('exit');
         },
-        ttsPay : function(text, payFun) {
-            callHandler('ttsPay', [text], function(callBackMsg) {
+        ttsPlay : function(text, payFun) {
+            callHandler('ttsPlay', [text], function(callBackMsg) {
                 payFun(callBackMsg);
             });
         },
-        ttsStop : function() {
-            callHandler('ttsStop', [], function(callBackMsg) {
-                console.log('WebViewJavascriptBridge');
-            });
+        ttsCancel : function() {
+            callHandler('ttsCancel', []);
+        },
+        ttsPause : function() {
+            callHandler('ttsPause', []);
+        },
+        ttsResume : function() {
+            callHandler('ttsResume', []);
         }
+
     };
 
     var ready = function(bridge) {
