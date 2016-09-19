@@ -5,6 +5,16 @@
             js调用java
         </title>
         <script type="text/javascript" src="js-sdk.js"></script>
+        <script>
+            /**监听是否跑在原生应用内*/
+            document.addEventListener(
+                'onDeviceReady',
+                function() {
+                    console.log('onDeviceReady');
+                },
+                false
+            );
+        </script>
     </head>
     
     <body>
@@ -13,9 +23,11 @@
             />
         </p>
         <p>
-            <input type="button" value="播放" onclick="device.ttsPay('你好', function(){
-                alert('payed');
-            });"
+            <input type="button" value="播放" onclick="device.ttsPay('你好', function(msg){console.log('receiveMsg:' + msg)});"
+            />
+        </p>
+        <p>
+            <input type="button" value="暂停" onclick="device.ttsStop();"
             />
         </p>
     </body>
