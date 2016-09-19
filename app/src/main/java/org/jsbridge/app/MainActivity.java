@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.os.Build;
 
@@ -36,6 +37,9 @@ public class MainActivity extends Activity {
 
     // 引擎类型
     private String mEngineType = SpeechConstant.TYPE_CLOUD;
+
+    //监听事件间隔,当间隔过大调用js显示广告
+
 
     private final String TAG = "MainActivity";
 //    private static final String START_URL = "file:///android_asset/index.html";
@@ -74,6 +78,7 @@ public class MainActivity extends Activity {
                     e.printStackTrace();
                 }
                 final CallBackFunction func = function;
+                setParam();
                 int code = mTts.startSpeaking(text, new SynthesizerListener(){
                     @Override
                     public void onSpeakBegin() {
@@ -221,7 +226,7 @@ public class MainActivity extends Activity {
             //设置合成音调
             mTts.setParameter(SpeechConstant.PITCH, "50");
             //设置合成音量
-            mTts.setParameter(SpeechConstant.VOLUME, "50");
+            mTts.setParameter(SpeechConstant.VOLUME, "100");
         }else {
             mTts.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_LOCAL);
             // 设置本地合成发音人 voicer为空，默认通过语记界面指定发音人。
@@ -258,4 +263,11 @@ public class MainActivity extends Activity {
             }
         }
     };
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        ev.getEventTime();
+        return super.dispatchTouchEvent(ev);
+
+    }
 }
