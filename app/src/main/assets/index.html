@@ -14,12 +14,20 @@
                 },
                 false
             );
+            /**监听是否显示广告*/
+            document.addEventListener(
+                'showAdvert',
+                function() {
+                    console.log('showAdvert');
+                },
+                false
+            );
         </script>
     </head>
     
     <body>
         <p>
-            <input type="button" value="exit" onclick="device.exit();"
+            <input type="button" value="退出应用程序" onclick="device.exit();"
             />
         </p>
         <p>
@@ -27,7 +35,7 @@
             />
         </p>
         <p>
-            <input type="button" value="取消" onclick="device.ttsStop();"
+            <input type="button" value="取消" onclick="device.ttsCancel();"
             />
         </p>
         <p>
@@ -35,7 +43,11 @@
             />
         </p>
         <p>
-            <input type="button" value="暂停" onclick="device.ttsStop();"
+            <input type="button" value="恢复播放" onclick="device.ttsResume();"
+            />
+        </p>
+        <p>
+            <input type="button" value="关闭广告" onclick="device.ttsResume();"
             />
         </p>
     </body>

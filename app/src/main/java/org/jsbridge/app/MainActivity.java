@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Build;
+import android.webkit.WebView;
 
 import com.github.lzyzsd.jsbridge.BridgeHandler;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
@@ -27,6 +28,9 @@ import com.iflytek.sunflower.FlowerCollector;
 
 import org.jsbridge.app.R;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class MainActivity extends Activity {
     // 语音合成对象
@@ -36,15 +40,21 @@ public class MainActivity extends Activity {
     ApkInstaller mInstaller;
 
     // 引擎类型
-    private String mEngineType = SpeechConstant.TYPE_CLOUD;
+    private static final String mEngineType = SpeechConstant.TYPE_CLOUD;
 
     //监听事件间隔,当间隔过大调用js显示广告
+    private final Timer timer = new Timer();
+    private final long NONE_TOUCH_PERIOD = 2*1000*60;
+    private long currentTime;
+    //TimerTask param
+    private final long period = 10;
+    private final long delay = 1;
+
 
 
     private final String TAG = "MainActivity";
 //    private static final String START_URL = "file:///android_asset/index.html";
-    private static final String START_URL = "http://192.168.58.127:8080/index.html";
-    BridgeWebView webView;
+    private static final String START_URL = "http://10.0.0.2:8080/index.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +62,8 @@ public class MainActivity extends Activity {
         hideVirtualButtons();
         setContentView(R.layout.activity_main);
         initTTs();
-        webView = (BridgeWebView) findViewById(R.id.webView);
+        final BridgeWebView webView = (BridgeWebView) findViewById(R.id.webView);
+        startTimerTask(webView);
 
         webView.setDefaultHandler(new DefaultHandler());
 
@@ -82,7 +93,7 @@ public class MainActivity extends Activity {
                 int code = mTts.startSpeaking(text, new SynthesizerListener(){
                     @Override
                     public void onSpeakBegin() {
-                        func.onCallBack("{speakProgress:0}");
+
                     }
 
                     @Override
@@ -108,7 +119,7 @@ public class MainActivity extends Activity {
                     @Override
                     public void onCompleted(SpeechError speechError) {
                         if (speechError == null) {
-                            func.onCallBack("{speakProgress:1}");
+                            func.onCallBack("{status:1}");
                         } else if (speechError != null) {
                             android.util.Log.v(TAG, speechError.getPlainDescription(true));
                         }
@@ -159,6 +170,14 @@ public class MainActivity extends Activity {
             }
         });
 
+        webView.registerHandler("hideAdvert", new BridgeHandler() {
+            @Override
+            public void handler(String data, CallBackFunction function) {
+                startTimerTask(webView);
+            }
+        });
+
+
         /** 原生调用js方法
          webView.callHandler("functionInJs", new Gson().toJson(user), new CallBackFunction() {
         @Override public void onCallBack(String data) {
@@ -166,6 +185,8 @@ public class MainActivity extends Activity {
         }
         });
          */
+
+
 
     }
 
@@ -179,6 +200,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onResume() {
+        currentTime = System.currentTimeMillis();
         //移动数据统计分析
         FlowerCollector.onResume(this);
         FlowerCollector.onPageStart(TAG);
@@ -264,9 +286,28 @@ public class MainActivity extends Activity {
         }
     };
 
+    private void startTimerTask(final BridgeWebView webView){
+        final TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                if (System.currentTimeMillis() - currentTime >= NONE_TOUCH_PERIOD) {
+                    webView.callHandler("showAdvert", "", new CallBackFunction() {
+                        @Override
+                        public void onCallBack(String data) {
+
+                        }
+                    });
+                    timer.cancel();
+                }
+            }
+        };
+        timer.schedule(task,delay*1000, period*1000);
+    }
+
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        ev.getEventTime();
+        currentTime = ev.getEventTime();
         return super.dispatchTouchEvent(ev);
 
     }

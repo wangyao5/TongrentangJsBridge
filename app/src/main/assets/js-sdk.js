@@ -19,13 +19,16 @@
             });
         },
         ttsCancel : function() {
-            callHandler('ttsCancel', []);
+            callHandler('ttsCancel');
         },
         ttsPause : function() {
-            callHandler('ttsPause', []);
+            callHandler('ttsPause');
         },
         ttsResume : function() {
-            callHandler('ttsResume', []);
+            callHandler('ttsResume');
+        },
+        hideAdvert : function() {
+            callHandler('hideAdvert');
         }
 
     };
@@ -38,6 +41,11 @@
             responseCallback(data);
         });
         win.device = device;
+        win.showAdvert = function() {
+            var showAdvertEvent = document.createEvent('Events');
+            showAdvertEvent.initEvent('showAdvert');
+            document.dispatchEvent(showAdvertEvent);
+        };
         var readyEvent = document.createEvent('Events');
         readyEvent.initEvent('onDeviceReady');
         document.dispatchEvent(readyEvent);
