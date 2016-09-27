@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.os.Build;
-import android.webkit.WebView;
 
 import com.github.lzyzsd.jsbridge.BridgeHandler;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
@@ -54,7 +53,7 @@ public class MainActivity extends Activity {
 
     private final String TAG = "MainActivity";
 //    private static final String START_URL = "file:///android_asset/index.html";
-    private static final String START_URL = "http://10.0.0.2:8080/index.html";
+    private static final String START_URL = "http://929.p.miinno.net/client/index.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

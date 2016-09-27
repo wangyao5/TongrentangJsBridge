@@ -5,11 +5,12 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "com.github.lzyzsd.jsbridge.example"
-        minSdkVersion 9
+        applicationId "com.tongrentang.app"
+        minSdkVersion 20
         targetSdkVersion 24
         versionCode 1
         versionName "1.0.0"
+        multiDexEnabled true
     }
 
     sourceSets {
